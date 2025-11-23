@@ -6,8 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 // ============================================
 
 // URL de l'API Google Apps Script
-const GOOGLE_API = 'https://script.google.com/macros/s/AKfycbz6kPLouHBaqkKIP5pgki1fhwD9nmSxpkntdTngdOnIcRJRKmJXXEdGbOfuNWL0JK1-/exec';
-const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(GOOGLE_API);
+const API_URL = '/api/proxy';
 
 // Types d'équipements et fluides
 const TYPES_EQUIPEMENTS = [
