@@ -6,7 +6,8 @@ import React, { useState, useRef, useEffect } from 'react';
 // ============================================
 
 // URL de l'API Google Apps Script
-const API_URL = 'https://corsproxy.io/?https://script.google.com/macros/s/AKfycbz6kPLouHBaqkKIP5pgki1fhwD9nmSxpkntdTngdOnIcRJRKmJXXEdGbOfuNWL0JK1-/exec';
+const GOOGLE_API = 'https://script.google.com/macros/s/AKfycbz6kPLouHBaqkKIP5pgki1fhwD9nmSxpkntdTngdOnIcRJRKmJXXEdGbOfuNWL0JK1-/exec';
+const API_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(GOOGLE_API);
 
 // Types d'équipements et fluides
 const TYPES_EQUIPEMENTS = [
@@ -284,7 +285,8 @@ export default function RapportAutomatise() {
       
     } catch (error) {
       console.error('Erreur workflow:', error);
-      showNotification(`❌ Erreur: ${error.message}`, 'error');
+      const errorMsg = typeof error === 'object' ? (error.message || JSON.stringify(error)) : String(error);
+      showNotification(`❌ Erreur: ${errorMsg}`, 'error');
     } finally {
       setIsLoading(false);
     }
