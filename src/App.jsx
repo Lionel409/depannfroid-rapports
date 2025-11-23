@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect } from 'react';
 // Version 3.0 - Avec intégration Google Sheets
 // ============================================
 
-// URL de l'API Google Apps Script (à remplacer après déploiement)
+// URL de l'API Google Apps Script
 const API_URL = 'https://script.google.com/macros/s/AKfycbz6kPLouHBaqkKIP5pgki1fhwD9nmSxpkntdTngdOnIcRJRKmJXXEdGbOfuNWL0JK1-/exec';
 
 // Types d'équipements et fluides
@@ -19,8 +19,8 @@ const FLUIDES = ['R-134a', 'R-404A', 'R-410A', 'R-32', 'R-290', 'R-600a', 'R-744
 
 // Tarifs par défaut (XPF)
 const TARIFS_DEFAUT = {
-  mainOeuvre: 8000,      // par heure
-  deplacement: 3500,     // forfait Moorea
+  mainOeuvre: 8000,
+  deplacement: 3500,
   deplacementTahiti: 8500
 };
 
@@ -69,9 +69,6 @@ const getTypeLabel = (type) => {
   return labels[type] || type?.toUpperCase() || '';
 };
 
-// ============================================
-// COMPOSANT PRINCIPAL
-// ============================================
 export default function RapportAutomatise() {
   const [activeTab, setActiveTab] = useState('saisie');
   const [logoUrl, setLogoUrl] = useState('');
@@ -80,7 +77,6 @@ export default function RapportAutomatise() {
   const [clients, setClients] = useState([]);
   const rapportRef = useRef(null);
   
-  // Configuration entreprise
   const [config, setConfig] = useState({
     nomEntreprise: "DEPANN'FROID",
     sousNom: "Installation & Maintenance Frigorifique",
@@ -88,11 +84,10 @@ export default function RapportAutomatise() {
     telephone: "+689 87 XX XX XX",
     email: "contact@depannfroid.pf",
     numeroTahiti: "N° TAHITI: XXXXXX",
-    numeroRC: "N° RC: XXXXX",
-    rcs: "RCS Papeete: XXXXX"
+    numeroRC: "N° RC: 061640 A",
+    rcs: "RCS Papeete: 061640 A"
   });
 
-  // Données du rapport
   const [rapport, setRapport] = useState({
     numeroRapport: `RI-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`,
     dateIntervention: new Date().toISOString().split('T')[0],
@@ -126,17 +121,14 @@ export default function RapportAutomatise() {
     urgence: 'normale'
   });
 
-  // Lignes de facturation
   const [lignesFacture, setLignesFacture] = useState([]);
   const [creerFacture, setCreerFacture] = useState(true);
   const [envoyerEmail, setEnvoyerEmail] = useState(true);
 
-  // Charger la liste des clients au démarrage
   useEffect(() => {
     chargerClients();
   }, []);
 
-  // Fonction pour charger les clients
   const chargerClients = async () => {
     try {
       const response = await fetch(API_URL, {
@@ -153,7 +145,6 @@ export default function RapportAutomatise() {
     }
   };
 
-  // Mise à jour des champs
   const updateRapport = (field, value) => {
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
@@ -170,7 +161,6 @@ export default function RapportAutomatise() {
     setConfig(prev => ({ ...prev, [field]: value }));
   };
 
-  // Sélection d'un client existant
   const selectionnerClient = (clientNom) => {
     const client = clients.find(c => c.nom === clientNom);
     if (client) {
@@ -185,13 +175,11 @@ export default function RapportAutomatise() {
     }
   };
 
-  // Génération du diagnostic
   const handleGenererDiagnostic = () => {
     const diagnostic = genererDiagnosticAuto(rapport.constatArrivee);
     updateRapport('diagnostic', diagnostic);
   };
 
-  // Gestion du logo
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -201,7 +189,6 @@ export default function RapportAutomatise() {
     }
   };
 
-  // Ajouter une ligne de facture
   const ajouterLigneFacture = (type = 'service') => {
     setLignesFacture(prev => [...prev, {
       id: Date.now(),
@@ -212,19 +199,16 @@ export default function RapportAutomatise() {
     }]);
   };
 
-  // Mettre à jour une ligne de facture
   const updateLigneFacture = (id, field, value) => {
     setLignesFacture(prev => prev.map(ligne => 
       ligne.id === id ? { ...ligne, [field]: value } : ligne
     ));
   };
 
-  // Supprimer une ligne de facture
   const supprimerLigneFacture = (id) => {
     setLignesFacture(prev => prev.filter(ligne => ligne.id !== id));
   };
 
-  // Calculer les totaux
   const calculerTotaux = () => {
     let htFournitures = 0;
     let htServices = 0;
@@ -247,15 +231,11 @@ export default function RapportAutomatise() {
     return { htFournitures, htServices, tvaFournitures, tvaServices, totalHT, totalTVA, totalTTC };
   };
 
-  // Afficher une notification
   const showNotification = (message, type = 'success') => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 5000);
   };
 
-  // ============================================
-  // WORKFLOW COMPLET - Sauvegarde + Email + Facture
-  // ============================================
   const lancerWorkflowComplet = async () => {
     if (!rapport.client) {
       showNotification('Veuillez renseigner le nom du client', 'error');
@@ -296,8 +276,6 @@ export default function RapportAutomatise() {
         }
         
         showNotification(message, 'success');
-        
-        // Réinitialiser pour nouveau rapport
         resetFormulaire();
         
       } else {
@@ -312,7 +290,6 @@ export default function RapportAutomatise() {
     }
   };
 
-  // Sauvegarde locale (mode hors ligne)
   const sauvegarderLocal = () => {
     const rapports = JSON.parse(localStorage.getItem('rapports_hors_ligne') || '[]');
     rapports.push({
@@ -324,45 +301,10 @@ export default function RapportAutomatise() {
     showNotification('💾 Rapport sauvegardé localement (mode hors ligne)', 'info');
   };
 
-  // Générer PDF local
   const genererPDFLocal = () => {
-    const printContent = rapportRef.current;
-    if (!printContent) {
-      setActiveTab('apercu');
-      setTimeout(() => genererPDFLocal(), 100);
-      return;
-    }
-    
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Rapport ${rapport.numeroRapport}</title>
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; padding: 20px; }
-            .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #0066cc; padding-bottom: 15px; margin-bottom: 20px; }
-            .company-name { font-size: 24px; font-weight: bold; color: #0066cc; }
-            .section-title { background: #0066cc; color: white; padding: 6px 12px; font-weight: bold; margin-bottom: 10px; }
-            .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-            .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-            .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-            .field-label { font-size: 9px; color: #666; }
-            .mesure-box { border: 1px solid #ddd; padding: 8px; text-align: center; background: #fafafa; }
-            .mesure-value { font-size: 14px; font-weight: bold; color: #0066cc; }
-            .signature-box { border: 1px solid #ddd; padding: 15px; min-height: 80px; }
-            .footer { margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px; text-align: center; font-size: 9px; color: #666; }
-            @media print { body { padding: 10px; } }
-          </style>
-        </head>
-        <body>${printContent.innerHTML}</body>
-      </html>
-    `);
-    printWindow.document.close();
-    printWindow.print();
+    window.print();
   };
 
-  // Reset formulaire
   const resetFormulaire = () => {
     setRapport({
       numeroRapport: `RI-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`,
@@ -384,7 +326,6 @@ export default function RapportAutomatise() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Notification */}
       {notification && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md ${
           notification.type === 'success' ? 'bg-green-500 text-white' :
@@ -395,7 +336,6 @@ export default function RapportAutomatise() {
         </div>
       )}
 
-      {/* Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg shadow-xl flex flex-col items-center gap-4">
@@ -406,7 +346,6 @@ export default function RapportAutomatise() {
         </div>
       )}
 
-      {/* Header */}
       <header className="bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -432,7 +371,6 @@ export default function RapportAutomatise() {
         </div>
       </header>
 
-      {/* Navigation */}
       <nav className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-1">
@@ -458,13 +396,10 @@ export default function RapportAutomatise() {
         </div>
       </nav>
 
-      {/* Contenu principal */}
       <main className="max-w-7xl mx-auto px-4 py-6">
         
-        {/* ==================== SAISIE ==================== */}
         {activeTab === 'saisie' && (
           <div className="space-y-6">
-            {/* Infos générales */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">📋 Informations générales</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -487,7 +422,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Client */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">🏢 Client</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -535,7 +469,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Équipement */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">⚙️ Équipement</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -571,7 +504,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Intervention */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">🔧 Intervention</h3>
               <div className="space-y-4">
@@ -614,7 +546,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Mesures */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">📊 Mesures</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -636,7 +567,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Pièces & Recommandations */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">📦 Pièces & Recommandations</h3>
               <div className="space-y-4">
@@ -667,10 +597,8 @@ export default function RapportAutomatise() {
           </div>
         )}
 
-        {/* ==================== FACTURATION ==================== */}
         {activeTab === 'facturation' && (
           <div className="space-y-6">
-            {/* Options */}
             <div className="bg-white rounded-lg shadow p-4">
               <h3 className="text-lg font-semibold text-blue-700 mb-4">⚙️ Options d'envoi</h3>
               <div className="flex flex-wrap gap-6">
@@ -688,7 +616,6 @@ export default function RapportAutomatise() {
               )}
             </div>
 
-            {/* Lignes de facturation */}
             {creerFacture && (
               <div className="bg-white rounded-lg shadow p-4">
                 <div className="flex items-center justify-between mb-4">
@@ -771,7 +698,6 @@ export default function RapportAutomatise() {
                   </div>
                 )}
 
-                {/* Totaux */}
                 {lignesFacture.length > 0 && (
                   <div className="mt-6 flex justify-end">
                     <div className="w-80 bg-gray-50 rounded-lg p-4">
@@ -811,7 +737,6 @@ export default function RapportAutomatise() {
               </div>
             )}
 
-            {/* Récapitulatif */}
             <div className="bg-blue-50 rounded-lg p-4">
               <h3 className="font-semibold text-blue-800 mb-3">📋 Récapitulatif de l'envoi</h3>
               <ul className="space-y-1 text-sm text-blue-700">
@@ -827,10 +752,8 @@ export default function RapportAutomatise() {
           </div>
         )}
 
-        {/* ==================== APERÇU ==================== */}
         {activeTab === 'apercu' && (
           <div ref={rapportRef} className="bg-white p-8 shadow-lg max-w-4xl mx-auto">
-            {/* En-tête */}
             <div className="flex justify-between items-start border-b-4 border-blue-600 pb-4 mb-6">
               <div className="flex items-center gap-4">
                 {logoUrl ? (
@@ -852,13 +775,11 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Titre */}
             <div className="bg-blue-600 text-white text-center py-3 mb-6 rounded">
               <h2 className="text-xl font-bold">RAPPORT D'INTERVENTION</h2>
               <p className="text-blue-200">{getTypeLabel(rapport.typeIntervention)}</p>
             </div>
 
-            {/* Infos */}
             <div className="grid grid-cols-4 gap-4 mb-6 bg-gray-50 p-4 rounded">
               <div><p className="text-xs text-gray-500">N° Rapport</p><p className="font-semibold">{rapport.numeroRapport}</p></div>
               <div><p className="text-xs text-gray-500">Date</p><p className="font-semibold">{formatDate(rapport.dateIntervention)}</p></div>
@@ -866,7 +787,6 @@ export default function RapportAutomatise() {
               <div><p className="text-xs text-gray-500">Technicien</p><p className="font-semibold">{rapport.technicien}</p></div>
             </div>
 
-            {/* Client */}
             <div className="mb-6">
               <h3 className="bg-blue-600 text-white px-4 py-2 font-semibold mb-3">CLIENT</h3>
               <div className="grid grid-cols-2 gap-4 px-2">
@@ -877,7 +797,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Équipement */}
             <div className="mb-6">
               <h3 className="bg-blue-600 text-white px-4 py-2 font-semibold mb-3">ÉQUIPEMENT</h3>
               <div className="grid grid-cols-3 gap-4 px-2">
@@ -887,7 +806,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Intervention */}
             <div className="mb-6">
               <h3 className="bg-blue-600 text-white px-4 py-2 font-semibold mb-3">INTERVENTION</h3>
               <div className="space-y-2 px-2">
@@ -897,7 +815,6 @@ export default function RapportAutomatise() {
               </div>
             </div>
 
-            {/* Mesures */}
             {Object.values(rapport.mesures).some(v => v) && (
               <div className="mb-6">
                 <h3 className="bg-blue-600 text-white px-4 py-2 font-semibold mb-3">MESURES</h3>
@@ -912,13 +829,11 @@ export default function RapportAutomatise() {
               </div>
             )}
 
-            {/* Signatures */}
             <div className="grid grid-cols-2 gap-8 mt-8">
               <div className="border rounded p-4"><p className="font-semibold text-sm mb-12">Signature Technicien</p><div className="border-b border-dashed"></div><p className="text-xs text-gray-500 mt-2">{rapport.technicien}</p></div>
               <div className="border rounded p-4"><p className="font-semibold text-sm mb-12">Signature Client</p><div className="border-b border-dashed"></div><p className="text-xs text-gray-500 mt-2">{rapport.contactSite || rapport.client}</p></div>
             </div>
 
-            {/* Footer */}
             <div className="border-t mt-8 pt-4 text-center text-xs text-gray-500">
               <p className="font-semibold">{config.nomEntreprise} - {config.sousNom}</p>
               <p>{config.adresse} | {config.telephone} | {config.email}</p>
@@ -927,7 +842,6 @@ export default function RapportAutomatise() {
           </div>
         )}
 
-        {/* ==================== CONFIG ==================== */}
         {activeTab === 'config' && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
@@ -981,22 +895,10 @@ export default function RapportAutomatise() {
                 </div>
               </div>
             </div>
-
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-blue-700 mb-4">🔗 API Google Apps Script</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Pour connecter à Google Sheets, déployez le script Apps Script et collez l'URL ci-dessous.
-              </p>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">URL de l'API</label>
-                <input type="text" placeholder="https://script.google.com/macros/s/xxx/exec" className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 font-mono text-sm" />
-              </div>
-            </div>
           </div>
         )}
       </main>
 
-      {/* Barre d'actions */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="text-sm text-gray-600">
