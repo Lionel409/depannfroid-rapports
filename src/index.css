@@ -1,0 +1,819 @@
+/* ============================================
+   DEPANN'FROID - Styles Globaux Application
+   Application de Génération de Rapports d'Intervention
+   ============================================ */
+
+/* Directives Tailwind - OBLIGATOIRES */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   VARIABLES CSS - Charte Graphique DEPANN'FROID
+   ============================================ */
+:root {
+  /* Couleurs principales */
+  --color-primary: #0ea5e9; /* Bleu froid professionnel */
+  --color-primary-dark: #0284c7;
+  --color-secondary: #06b6d4; /* Cyan technique */
+  --color-accent: #f59e0b; /* Orange urgence */
+  
+  /* Couleurs état */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+  
+  /* Couleurs neutres */
+  --color-dark: #1e293b;
+  --color-gray: #64748b;
+  --color-light: #f8fafc;
+  
+  /* Typographie */
+  --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+                  'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 
+                  'Helvetica Neue', sans-serif;
+  
+  /* Espacement */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Ombres */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* ============================================
+   STYLES DE BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================
+   STYLES POUR L'IMPRESSION / PDF
+   CRUCIAL pour tes rapports d'intervention !
+   ============================================ */
+@media print {
+  /* Optimisation page */
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+  
+  /* Fond blanc pour économie encre */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Éviter coupures de contenu */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  table {
+    page-break-inside: avoid;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+  }
+  
+  img {
+    page-break-inside: avoid;
+  }
+  
+  /* Masquer éléments UI non nécessaires */
+  button:not(.print-show), 
+  .no-print,
+  nav:not(.print-show),
+  .sidebar,
+  .floating-action,
+  .toolbar {
+    display: none !important;
+  }
+  
+  /* Afficher URLs des liens (optionnel) */
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  /* Optimiser images */
+  img {
+    max-width: 100%;
+  }
+  
+  /* Forcer fond blanc sur containers */
+  .rapport-container,
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+/* ============================================
+   COMPOSANTS PERSONNALISÉS - Boutons
+   ============================================ */
+
+.btn-primary {
+  @apply bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2.5 px-6 
+         rounded-lg shadow-md transition-all duration-200 
+         hover:shadow-lg active:scale-95 disabled:opacity-50 
+         disabled:cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2.5 px-6 
+         rounded-lg shadow-md transition-all duration-200 
+         hover:shadow-lg active:scale-95;
+}
+
+.btn-danger {
+  @apply bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-6 
+         rounded-lg shadow-md transition-all duration-200 
+         hover:shadow-lg active:scale-95;
+}
+
+.btn-success {
+  @apply bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-6 
+         rounded-lg shadow-md transition-all duration-200 
+         hover:shadow-lg active:scale-95;
+}
+
+.btn-warning {
+  @apply bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2.5 px-6 
+         rounded-lg shadow-md transition-all duration-200 
+         hover:shadow-lg active:scale-95;
+}
+
+.btn-outline {
+  @apply border-2 border-sky-500 text-sky-500 hover:bg-sky-500 
+         hover:text-white font-semibold py-2 px-6 rounded-lg 
+         transition-all duration-200 active:scale-95;
+}
+
+.btn-ghost {
+  @apply text-gray-700 hover:bg-gray-100 font-semibold py-2 px-4 
+         rounded-lg transition-all duration-200;
+}
+
+/* ============================================
+   COMPOSANTS - Cartes et Containers
+   ============================================ */
+
+.card {
+  @apply bg-white rounded-lg shadow-md p-6 border border-gray-200 
+         hover:shadow-lg transition-shadow duration-200;
+}
+
+.card-hover {
+  @apply bg-white rounded-lg shadow-md p-6 border border-gray-200 
+         hover:shadow-xl hover:-translate-y-1 transition-all duration-300 
+         cursor-pointer;
+}
+
+.container-app {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+}
+
+/* ============================================
+   COMPOSANTS - Inputs et Forms
+   ============================================ */
+
+.input-field {
+  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-sky-500 
+         focus:border-transparent transition-all duration-200
+         disabled:bg-gray-100 disabled:cursor-not-allowed;
+}
+
+.input-error {
+  @apply border-red-500 focus:ring-red-500;
+}
+
+.input-success {
+  @apply border-green-500 focus:ring-green-500;
+}
+
+.textarea-field {
+  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-sky-500 
+         focus:border-transparent transition-all duration-200 
+         resize-none min-h-[100px];
+}
+
+.select-field {
+  @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-sky-500 
+         focus:border-transparent transition-all duration-200
+         appearance-none bg-white cursor-pointer;
+}
+
+.label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.label-required::after {
+  content: " *";
+  @apply text-red-500;
+}
+
+.error-message {
+  @apply text-red-500 text-sm mt-1 flex items-center gap-1;
+}
+
+.helper-text {
+  @apply text-gray-500 text-xs mt-1;
+}
+
+/* ============================================
+   COMPOSANTS - Badges et Pills
+   ============================================ */
+
+.badge {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-800;
+}
+
+.badge-error {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-info {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.badge-primary {
+  @apply bg-sky-100 text-sky-800;
+}
+
+.badge-secondary {
+  @apply bg-cyan-100 text-cyan-800;
+}
+
+.badge-lg {
+  @apply px-4 py-2 text-sm;
+}
+
+/* ============================================
+   COMPOSANTS - Alerts et Notifications
+   ============================================ */
+
+.alert {
+  @apply p-4 rounded-lg border flex items-start gap-3;
+}
+
+.alert-success {
+  @apply bg-green-50 border-green-200 text-green-800;
+}
+
+.alert-warning {
+  @apply bg-amber-50 border-amber-200 text-amber-800;
+}
+
+.alert-error {
+  @apply bg-red-50 border-red-200 text-red-800;
+}
+
+.alert-info {
+  @apply bg-blue-50 border-blue-200 text-blue-800;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ============================================
+   SCROLLBAR PERSONNALISÉE
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* ============================================
+   COMPOSANTS SPÉCIFIQUES - RAPPORTS
+   ============================================ */
+
+/* Container principal du rapport */
+.rapport-container {
+  @apply max-w-4xl mx-auto bg-white shadow-lg p-8 my-6 rounded-lg;
+}
+
+/* En-tête du rapport avec logo */
+.rapport-header {
+  @apply border-b-2 border-sky-500 pb-6 mb-6 flex items-center justify-between;
+}
+
+.rapport-header-title {
+  @apply text-3xl font-bold text-gray-800;
+}
+
+.rapport-header-subtitle {
+  @apply text-sm text-gray-500 mt-1;
+}
+
+/* Informations client */
+.client-info {
+  @apply grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg;
+}
+
+.client-info-label {
+  @apply text-sm font-semibold text-gray-600;
+}
+
+.client-info-value {
+  @apply text-sm text-gray-800;
+}
+
+/* Section du rapport */
+.rapport-section {
+  @apply mb-6 pb-4 border-b border-gray-200 last:border-b-0;
+}
+
+.rapport-section-title {
+  @apply text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2;
+}
+
+.rapport-section-content {
+  @apply text-gray-700 leading-relaxed;
+}
+
+/* Tableaux techniques */
+.table-technique {
+  @apply w-full border-collapse border border-gray-300 rounded-lg overflow-hidden;
+}
+
+.table-technique thead {
+  @apply bg-sky-50;
+}
+
+.table-technique th {
+  @apply text-left p-3 font-semibold text-gray-700 border-b-2 border-sky-200;
+}
+
+.table-technique td {
+  @apply p-3 border-b border-gray-200;
+}
+
+.table-technique tbody tr:hover {
+  @apply bg-gray-50;
+}
+
+.table-technique tbody tr:last-child td {
+  @apply border-b-0;
+}
+
+/* Liste de matériel utilisé */
+.materiel-list {
+  @apply space-y-2;
+}
+
+.materiel-item {
+  @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg
+         hover:bg-gray-100 transition-colors;
+}
+
+.materiel-item-name {
+  @apply font-medium text-gray-800;
+}
+
+.materiel-item-details {
+  @apply text-sm text-gray-600;
+}
+
+/* Zone de signature */
+.signature-zone {
+  @apply mt-8 pt-6 border-t-2 border-gray-300 grid grid-cols-2 gap-8;
+}
+
+.signature-box {
+  @apply text-center;
+}
+
+.signature-label {
+  @apply text-sm font-semibold text-gray-600 mb-4;
+}
+
+.signature-line {
+  @apply border-t-2 border-gray-400 pt-2 mt-16;
+}
+
+.signature-date {
+  @apply text-xs text-gray-500 mt-2;
+}
+
+/* Photos et pièces jointes */
+.photo-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 gap-4 mt-4;
+}
+
+.photo-item {
+  @apply relative aspect-square rounded-lg overflow-hidden 
+         border-2 border-gray-200 hover:border-sky-400 
+         transition-colors cursor-pointer;
+}
+
+.photo-item img {
+  @apply w-full h-full object-cover;
+}
+
+.photo-caption {
+  @apply absolute bottom-0 left-0 right-0 bg-black/60 
+         text-white text-xs p-2;
+}
+
+/* Résumé financier */
+.financial-summary {
+  @apply bg-gradient-to-br from-sky-50 to-cyan-50 
+         p-6 rounded-lg border-2 border-sky-200 mt-6;
+}
+
+.financial-row {
+  @apply flex justify-between items-center py-2 border-b 
+         border-sky-200 last:border-b-0;
+}
+
+.financial-label {
+  @apply text-gray-700 font-medium;
+}
+
+.financial-value {
+  @apply text-gray-900 font-semibold;
+}
+
+.financial-total {
+  @apply text-2xl font-bold text-sky-700 pt-4 mt-4 border-t-2 border-sky-300;
+}
+
+/* ============================================
+   UTILITAIRES MÉTIER - MAINTENANCE
+   ============================================ */
+
+/* Indicateur de priorité */
+.priority-high {
+  @apply bg-red-500 text-white;
+}
+
+.priority-medium {
+  @apply bg-amber-500 text-white;
+}
+
+.priority-low {
+  @apply bg-green-500 text-white;
+}
+
+/* État d'équipement */
+.equipment-status-good {
+  @apply bg-green-100 border-green-300 text-green-800;
+}
+
+.equipment-status-warning {
+  @apply bg-amber-100 border-amber-300 text-amber-800;
+}
+
+.equipment-status-critical {
+  @apply bg-red-100 border-red-300 text-red-800;
+}
+
+/* Mesures techniques */
+.measurement-card {
+  @apply bg-white border-2 border-gray-200 rounded-lg p-4 
+         hover:border-sky-300 transition-colors;
+}
+
+.measurement-label {
+  @apply text-xs uppercase tracking-wide text-gray-500 font-semibold;
+}
+
+.measurement-value {
+  @apply text-3xl font-bold text-gray-900 my-2;
+}
+
+.measurement-unit {
+  @apply text-sm text-gray-600;
+}
+
+.measurement-status {
+  @apply text-xs font-medium mt-2;
+}
+
+/* ============================================
+   RESPONSIVE MOBILE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .rapport-container {
+    @apply p-4 my-2;
+  }
+  
+  .rapport-header {
+    @apply flex-col items-start gap-4;
+  }
+  
+  .signature-zone {
+    @apply grid-cols-1 gap-4;
+  }
+  
+  .table-technique {
+    @apply text-sm;
+  }
+  
+  .table-technique th,
+  .table-technique td {
+    @apply p-2;
+  }
+  
+  .client-info {
+    @apply grid-cols-1;
+  }
+  
+  .financial-summary {
+    @apply p-4;
+  }
+  
+  .photo-grid {
+    @apply grid-cols-1;
+  }
+}
+
+/* ============================================
+   CLASSES UTILITAIRES CUSTOM
+   ============================================ */
+
+.text-gradient {
+  @apply bg-gradient-to-r from-sky-500 to-cyan-500 
+         bg-clip-text text-transparent font-bold;
+}
+
+.text-gradient-warm {
+  @apply bg-gradient-to-r from-amber-500 to-orange-500 
+         bg-clip-text text-transparent font-bold;
+}
+
+.glass-effect {
+  @apply bg-white/90 backdrop-blur-md border border-white/20 
+         shadow-xl;
+}
+
+.hover-lift {
+  @apply transition-transform duration-200 hover:-translate-y-1;
+}
+
+.hover-scale {
+  @apply transition-transform duration-200 hover:scale-105;
+}
+
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-sky-500 
+         focus:ring-offset-2 rounded-lg;
+}
+
+/* Dividers */
+.divider {
+  @apply border-t border-gray-200 my-4;
+}
+
+.divider-vertical {
+  @apply border-l border-gray-200 mx-4;
+}
+
+/* Skeleton loader */
+.skeleton {
+  @apply bg-gray-200 animate-pulse rounded;
+}
+
+.skeleton-text {
+  @apply h-4 bg-gray-200 animate-pulse rounded;
+}
+
+.skeleton-circle {
+  @apply rounded-full bg-gray-200 animate-pulse;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.loading-spinner {
+  @apply inline-block w-6 h-6 border-3 border-sky-500 
+         border-t-transparent rounded-full animate-spin;
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+
+.tooltip {
+  @apply relative inline-block;
+}
+
+.tooltip-text {
+  @apply invisible absolute z-10 px-3 py-2 text-sm text-white 
+         bg-gray-900 rounded-lg opacity-0 transition-opacity 
+         duration-300 whitespace-nowrap;
+}
+
+.tooltip:hover .tooltip-text {
+  @apply visible opacity-100;
+}
+
+/* ============================================
+   TRANSITIONS COMMUNES
+   ============================================ */
+
+.transition-base {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+.transition-slow {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.transition-fast {
+  @apply transition-all duration-100 ease-in-out;
+}
+
+/* ============================================
+   PRINT UTILITIES
+   ============================================ */
+
+.print-only {
+  @apply hidden;
+}
+
+@media print {
+  .print-only {
+    display: block !important;
+  }
+  
+  .print-hide {
+    display: none !important;
+  }
+  
+  .print-page-break {
+    page-break-before: always;
+  }
+  
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITÉ
+   ============================================ */
+
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden 
+         whitespace-nowrap border-0;
+}
+
+.focus-visible:focus-visible {
+  @apply outline-none ring-2 ring-sky-500 ring-offset-2;
+}
+
+/* Amélioration contraste mode sombre (si implémenté) */
+@media (prefers-color-scheme: dark) {
+  /* Désactivé par défaut pour les documents professionnels */
+  /* Décommenter et adapter si besoin futur */
+}
+
+/* ============================================
+   FIN DU FICHIER
+   Version: 1.0.0
+   Dernière mise à jour: 2025
+   ============================================ */
