@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import SignatureRapport from './SignatureRapport';
 
 // ============================================
 // SYSTÈME DE RAPPORTS AUTOMATISÉS DEPANN'FROID
