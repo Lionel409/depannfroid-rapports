@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignatureRapport from './SignatureRapport';
+import Paiements from './Paiements';
 
 // ============================================
 // SYSTÈME DE RAPPORTS AUTOMATISÉS DEPANN'FROID
@@ -34,7 +35,8 @@ function RapportForm() {
   // États du formulaire
   const [rapport, setRapport] = useState({
     date: new Date().toISOString().split('T')[0],
-    horaires: '',
+    heureDebut: '',
+    heureFin: '',
     technicien: 'Lionel',
     client: {
       nom: '',
@@ -177,10 +179,16 @@ function RapportForm() {
     setMessage(null);
 
     try {
+      // Combine les horaires en format "HH:MM - HH:MM"
+      const rapportAvecHoraires = {
+        ...rapport,
+        horaires: `${rapport.heureDebut} - ${rapport.heureFin}`
+      };
+      
       // Prépare les données à envoyer
       const data = {
         action: 'creerRapport',
-        rapport: rapport,
+        rapport: rapportAvecHoraires,
         facture: envoyerFacture ? facture : null,
         envoyerRapport,
         envoyerFacture
@@ -239,10 +247,25 @@ function RapportForm() {
           <h1 className="text-4xl font-bold text-gray-800">DEPANN'FROID</h1>
           <p className="text-sm text-gray-600 mt-1">Système de rapports automatisés v4.0</p>
         </div>
-        <button className="btn-primary" disabled>
-          <span className="text-xl">❄️</span>
-          Connecté à Google Sheets
-        </button>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <a 
+            href="/paiements"
+            className="btn-secondary"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            💰 Gérer paiements
+          </a>
+          <a 
+            href="https://docs.google.com/spreadsheets/d/1_IcM5_wH4CI-HbwA9q515LvgPrVrZ_YZCiwc6xprE-A/edit"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <span className="text-xl">❄️</span>
+            Ouvrir Google Sheets
+          </a>
+        </div>
       </div>
 
       {message && (
@@ -271,13 +294,22 @@ function RapportForm() {
               />
             </div>
             <div>
-              <label className="label">Horaires (Début - Fin) *</label>
+              <label className="label">Heure début *</label>
               <input
-                type="text"
+                type="time"
                 className="input-field"
-                placeholder="08:00 - 10:00"
-                value={rapport.horaires}
-                onChange={(e) => setRapport({ ...rapport, horaires: e.target.value })}
+                value={rapport.heureDebut}
+                onChange={(e) => setRapport({ ...rapport, heureDebut: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label className="label">Heure fin *</label>
+              <input
+                type="time"
+                className="input-field"
+                value={rapport.heureFin}
+                onChange={(e) => setRapport({ ...rapport, heureFin: e.target.value })}
                 required
               />
             </div>
@@ -865,6 +897,12 @@ function RapportForm() {
           color: white;
         }
 
+        .btn-primary:hover {
+          background: #2563eb;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
         .btn-secondary {
           background: #10b981;
           color: white;
@@ -943,6 +981,7 @@ function App() {
       <Routes>
         <Route path="/" element={<RapportForm />} />
         <Route path="/signature/:token" element={<SignatureRapport />} />
+        <Route path="/paiements" element={<Paiements />} />
       </Routes>
     </BrowserRouter>
   );
