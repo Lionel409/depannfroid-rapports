@@ -119,21 +119,21 @@ function RapportForm() {
       }
     });
 
-    const tvaFournitures = totalHTFournitures * 0.16;
-    const tvaServices = totalHTServices * 0.13;
+    const tvaFournitures = Math.round(totalHTFournitures * 0.16);
+    const tvaServices = Math.round(totalHTServices * 0.13);
     const totalHT = totalHTFournitures + totalHTServices;
     const totalTVA = tvaFournitures + tvaServices;
     const totalTTC = totalHT + totalTVA;
 
     setFacture(prev => ({
       ...prev,
-      total_ht_fournitures: totalHTFournitures,
+      total_ht_fournitures: Math.round(totalHTFournitures),
       tva_fournitures: tvaFournitures,
-      total_ht_services: totalHTServices,
+      total_ht_services: Math.round(totalHTServices),
       tva_services: tvaServices,
-      total_ht: totalHT,
+      total_ht: Math.round(totalHT),
       total_tva: totalTVA,
-      total_ttc: totalTTC
+      total_ttc: Math.round(totalTTC)
     }));
   };
 
