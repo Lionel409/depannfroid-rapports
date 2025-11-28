@@ -5,19 +5,28 @@ import { useNavigate } from 'react-router-dom';
 const API_URL = 'https://script.google.com/macros/s/AKfycbxOPxdU2c4fQYwZR8VqiRs0daqAh_bB6ADMs4Gh5-ycMQI-8Y81s-ccsXIvOJE60rYO/exec';
 
 function Paiements() {
+  console.log('🚀 Composant Paiements chargé');
+  
   const navigate = useNavigate();
   const [factures, setFactures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   const [processing, setProcessing] = useState(null);
 
+  console.log('📊 État initial:', { facturesCount: factures.length, loading, API_URL });
+
   useEffect(() => {
+    console.log('⚡ useEffect - chargement des factures');
     chargerFactures();
   }, []);
 
   const chargerFactures = async () => {
+    console.log('📡 chargerFactures - début');
+    
     try {
       setLoading(true);
+      
+      console.log('📤 Envoi requête getFacturesEnAttente à:', API_URL);
       
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -30,28 +39,42 @@ function Paiements() {
         })
       });
 
+      console.log('📥 Response:', response.status, response.statusText);
+
       const data = await response.json();
+      console.log('📄 Data reçue:', data);
 
       if (data.success) {
+        console.log('✅ Factures chargées:', data.factures?.length || 0);
         setFactures(data.factures || []);
       } else {
+        console.log('❌ Erreur API:', data.message);
         setMessage({ type: 'error', text: 'Erreur lors du chargement des factures' });
       }
     } catch (err) {
-      console.error('Erreur:', err);
+      console.error('💥 Erreur catch:', err);
       setMessage({ type: 'error', text: 'Erreur de connexion' });
     } finally {
       setLoading(false);
+      console.log('🏁 chargerFactures - fin');
     }
   };
 
   const marquerPayee = async (numeroFacture, index) => {
+    console.log('🔵 marquerPayee appelée', { numeroFacture, index });
+    
     if (!window.confirm(`Confirmer le paiement de la facture ${numeroFacture} ?`)) {
+      console.log('❌ Confirmation annulée');
       return;
     }
 
+    console.log('✅ Confirmation OK, envoi requête...');
+
     try {
       setProcessing(index);
+
+      console.log('📡 URL API:', API_URL);
+      console.log('📦 Data envoyée:', { action: 'marquerFacturePayee', numeroFacture });
 
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -65,7 +88,10 @@ function Paiements() {
         })
       });
 
+      console.log('📥 Response reçue:', response.status, response.statusText);
+
       const data = await response.json();
+      console.log('📄 Data parsée:', data);
 
       if (data.success) {
         setMessage({ type: 'success', text: `Facture ${numeroFacture} marquée comme payée` });
