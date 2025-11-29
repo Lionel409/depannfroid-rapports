@@ -191,7 +191,7 @@ function SignatureRapport() {
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e0f2fe 0%, #5577a6 100%)',
+      background: 'linear-gradient(135deg, #e0f2fe 0%, #7dd3fc 100%)',
       fontFamily: 'Arial, sans-serif',
       padding: '20px'
     }}>
