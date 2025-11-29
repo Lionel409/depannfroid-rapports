@@ -806,7 +806,7 @@ function RapportForm() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem;
-          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
           min-height: 100vh;
           font-family: system-ui, -apple-system, sans-serif;
         }
