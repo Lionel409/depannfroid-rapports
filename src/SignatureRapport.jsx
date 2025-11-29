@@ -191,16 +191,16 @@ function SignatureRapport() {
   return (
     <div style={{ 
       minHeight: '100vh',
-      backgroundColor: '#f5f5f5',
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
       fontFamily: 'Arial, sans-serif',
       padding: '20px'
     }}>
       <div style={{ 
         maxWidth: '800px', 
         margin: '0 auto',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+        backgroundColor: '#ffffff',
+        borderRadius: '12px',
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08)',
         padding: '40px'
       }}>
         {/* En-tête */}
