@@ -214,7 +214,7 @@ function Paiements() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem;
-          background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+          background: linear-gradient(135deg, #e0f2fe 0%, #7dd3fc 100%);
           min-height: 100vh;
           font-family: system-ui, -apple-system, sans-serif;
         }
