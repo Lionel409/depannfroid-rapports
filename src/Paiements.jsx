@@ -214,7 +214,7 @@ function Paiements() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem;
-          background-color: #f9fafb;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
           min-height: 100vh;
           font-family: system-ui, -apple-system, sans-serif;
         }
@@ -225,16 +225,16 @@ function Paiements() {
           align-items: center;
           margin-bottom: 2rem;
           padding: 1.5rem;
-          background: white;
+          background: #ffffff;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .card {
-          background: white;
+          background: #ffffff;
           padding: 2rem;
           border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .factures-liste {
@@ -248,14 +248,15 @@ function Paiements() {
           justify-content: space-between;
           align-items: center;
           padding: 1.5rem;
-          background: #f9fafb;
+          background: #ffffff;
           border-radius: 8px;
           border-left: 4px solid #3b82f6;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
           transition: all 0.2s;
         }
 
         .facture-card:hover {
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 6px 12px rgba(0,0,0,0.12);
           transform: translateY(-2px);
         }
 
