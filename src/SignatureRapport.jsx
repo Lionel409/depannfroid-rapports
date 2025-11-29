@@ -191,7 +191,7 @@ function SignatureRapport() {
   return (
     <div style={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+      background: 'linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%)',  // ← BLEU TECH ✨
       fontFamily: 'Arial, sans-serif',
       padding: '20px'
     }}>
