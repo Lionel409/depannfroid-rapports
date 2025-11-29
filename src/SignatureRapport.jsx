@@ -194,7 +194,48 @@ function SignatureRapport() {
       background: 'linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%)',  // ← BLEU TECH ✨
       fontFamily: 'Arial, sans-serif',
       padding: '20px'
-    }}>
+  }}>
+
+## 🔍 MÉTHODE RAPIDE AVEC CTRL+H
+
+**Dans chaque fichier :**
+
+1. **Ctrl+H** (Rechercher et remplacer)
+
+2. **Chercher :**
+```
+   linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)
+```
+
+3. **Remplacer par :**
+```
+   linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%)
+```
+
+4. **Remplacer tout** (ou 1 par 1)
+
+---
+
+## 📊 RÉSUMÉ DES CHANGEMENTS
+
+| Fichier | Ligne | Ancien | Nouveau |
+|---------|-------|--------|---------|
+| App.jsx | ~809 | `#f8f9fa 0%, #e9ecef 100%` | `#f0f4f8 0%, #e2e8f0 100%` |
+| Paiements.jsx | ~213 | `#f8f9fa 0%, #e9ecef 100%` | `#f0f4f8 0%, #e2e8f0 100%` |
+| SignatureRapport.jsx | ~195 | `#f8f9fa 0%, #e9ecef 100%` | `#f0f4f8 0%, #e2e8f0 100%` |
+
+---
+
+## 🎨 RENDU VISUEL BLEU TECH
+
+**AVANT (Gris) :**
+```
+Fond : #f8f9fa → #e9ecef (gris clair)
+```
+
+**APRÈS (Bleu) :**
+```
+Fond : #f0f4f8 → #e2e8f0 (bleu très clair)
       <div style={{ 
         maxWidth: '800px', 
         margin: '0 auto',
